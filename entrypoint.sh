@@ -26,8 +26,6 @@ if [ -n "$MYSQL_USER" ]; then
   done
 fi
 
-bundle install
-
 rake db:migrate
 
 set -e
