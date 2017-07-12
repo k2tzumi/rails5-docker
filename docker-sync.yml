@@ -28,6 +28,6 @@ sync_default: &sync_default
   watch_strategy: 'fswatch'
      
 syncs:
- rails-app:
+ rails5docker_rails-app:
     <<: *sync_default
-    src: './camaleon_cms'
+    src: './rails5_app'

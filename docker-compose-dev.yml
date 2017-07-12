@@ -2,10 +2,10 @@ version: '3.0'
 services:
   rails:
     volumes:
-      - rails-app:/web/rails5_app/:rw,nocopy
+      - rails5docker_rails-app:/web/rails5_app/:rw,nocopy
       - web-sock:/web/rails5_app/tmp/sockets
       - web-assets:/web/rails5_app/public
 
 volumes:
-  rails-app:
+  rails5docker_rails-app:
     external: true
