@@ -1,7 +1,7 @@
 Ruby on Rails Docker Image
 ==============================
 
- This image is for developing with [Ruby on Rails ](http://rubyonrails.org/ application
+ This image is for developing with [Ruby on Rails ](http://rubyonrails.org/) application
 
 REQUIREMENTS
 --------------------
@@ -13,7 +13,7 @@ REQUIREMENTS
 USAGE
 --------------------
 
-### General
+### Production
 
 Use for basic.
 
