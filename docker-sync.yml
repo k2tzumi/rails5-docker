@@ -1,0 +1,33 @@
+version: '2'
+
+options:
+  compose-file-path: 'docker-compose.yml'
+  compose-dev-file-path: 'docker-compose-dev.yml'
+  verbose: true
+  rsync_image: 'eugenmayer/rsync'
+  unison_image: 'eugenmayer/unison'
+  cli_mode: 'auto'
+  max_attempt: 5
+  project_root: 'pwd'
+
+sync_default: &sync_default
+  notify_terminal: true
+
+  sync_host_ip: 'auto'
+  sync_host_port: 10871
+
+  sync_excludes: [ '.gitignore', '.git/', 'tmp/', 'tmp/cache', 'log', '.idea/' ]
+  sync_excludes_type: 'Path'
+
+  sync_strategy: 'unison'
+  sync_userid: '500'
+  sync_prefer: 'default'
+     
+  watch_excludes: [ '.*/.git', '.gitignore', '.git/', 'vendor/bundle', 'tmp/', 'log/', '.idea/' ]
+  watch_args: '-v'
+  watch_strategy: 'fswatch'
+     
+syncs:
+ rails-app:
+    <<: *sync_default
+    src: './camaleon_cms'
