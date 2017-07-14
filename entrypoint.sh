@@ -3,6 +3,9 @@
 source /etc/profile.d/rbenv.sh
 source /etc/profile.d/ndenv.sh
 
+export PATH=$PATH:`npm bin -g`
+export PATH=$PATH:`yarn global bin`
+
 # set timezone
 if [ -e /usr/share/${TZ} ]; then
   sudo ln -sf /usr/share/${TZ} /etc/localtime
