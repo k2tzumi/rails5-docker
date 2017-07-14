@@ -28,6 +28,6 @@ sync_default: &sync_default
   watch_strategy: 'fswatch'
      
 syncs:
- rails5docker_rails-app:
+ rails5_app:
     <<: *sync_default
-    src: './rails5_app'
+    src: './rails5_app/'
