@@ -46,6 +46,7 @@ RUN	true && \
 	source /etc/profile.d/rbenv.sh && \
 # rails install
 # RoR version check '>= 5.1'
+# FIXME: Syntax Error
 #	yum install -y bc && \
 #	echo "scale=1; ${RAILS_VERSION} >= 5.1" | bc && \
 	rbenv exec gem install rails -v ${RAILS_VERSION} && \
@@ -54,6 +55,8 @@ RUN	true && \
 	rbenv exec gem install therubyracer && \
 	rbenv exec gem install mysql2 && \
 	rbenv rehash && \
+	gem update bundler && \
+	bundler -v && \
 	true
 
 ENV	NDENV_ROOT /usr/local/ndenv
@@ -89,9 +92,17 @@ ENV	APP_ROOT /web/rails5_app
 
 ARG GIT_REPOS
 
+ADD	./credentials.env /credentials.env
+
 RUN	true && \
 	source /etc/profile.d/rbenv.sh && \
 	source /etc/profile.d/ndenv.sh && \
+	source /credentials.env && \
+	export PATH=$PATH:`npm bin -g` && \
+# setting Personal access tokens
+	echo "machine github.com" >> ~/.netrc && \
+	echo "login ${PERSONAL_ACCESS_TOKENS}" >> ~/.netrc && \
+	echo "password x-oauth-basic" >> ~/.netrc && \
 	mkdir -p ${APP_ROOT} && \
 	cd ${APP_ROOT} && \
 # git clone
@@ -99,9 +110,10 @@ RUN	true && \
         sed -i "s/^# gem 'therubyracer'/gem 'therubyracer'/g" Gemfile && \
         sed -i "s/^gem 'sqlite3'/gem 'mysql2', '>= 0.3.18', '< 0.5'/g" Gemfile && \
         sed -i "s/^gem 'pg'/gem 'mysql2', '>= 0.3.18', '< 0.5'/g" Gemfile && \
-	bundle update && \
 	bundle install && \
-	yarn install && \
+#	yes | rails webpacker:install && \
+#	yes | rails webpacker:install:vue && \
+	[ -e package.json ] && yarn install && \
 # nginx connecting sockets
 	echo "app_root = File.expand_path(\"../..\", __FILE__)" >> config/puma.rb && \
 	echo "bind \"unix://#{app_root}/tmp/sockets/puma.sock\"" >> config/puma.rb && \
