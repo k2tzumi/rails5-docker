@@ -54,8 +54,8 @@ RUN	true && \
 	rbenv exec gem install bundler && \
 	rbenv exec gem install therubyracer && \
 	rbenv exec gem install mysql2 && \
+	rbenv exec gem install bcrypt && \
 	rbenv rehash && \
-	gem update bundler && \
 	bundler -v && \
 	true
 
@@ -107,12 +107,13 @@ RUN	true && \
 	cd ${APP_ROOT} && \
 # git clone
 	git clone ${GIT_REPOS} . && \
-        sed -i "s/^# gem 'therubyracer'/gem 'therubyracer'/g" Gemfile && \
-        sed -i "s/^gem 'sqlite3'/gem 'mysql2', '>= 0.3.18', '< 0.5'/g" Gemfile && \
-        sed -i "s/^gem 'pg'/gem 'mysql2', '>= 0.3.18', '< 0.5'/g" Gemfile && \
-	bundle install && \
-#	yes | rails webpacker:install && \
-#	yes | rails webpacker:install:vue && \
+	sed -i "s/^# gem 'therubyracer'/gem 'therubyracer'/g" Gemfile && \
+	sed -i "s/^gem 'sqlite3'/gem 'mysql2', '>= 0.3.18', '< 0.5'/g" Gemfile && \
+	sed -i "s/^gem 'pg'/gem 'mysql2', '>= 0.3.18', '< 0.5'/g" Gemfile && \
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+	rbenv exec bundle lock --add-platform x86-mswin32 java && \
+	rbenv exec bundle install --system && \
+	rbenv rehash && \
 	[ -e package.json ] && yarn install && \
 # nginx connecting sockets
 	echo "app_root = File.expand_path(\"../..\", __FILE__)" >> config/puma.rb && \
@@ -135,6 +136,7 @@ COPY --from=build-env $APP_ROOT $APP_ROOT
 COPY	rbenv.sh /etc/profile.d/
 COPY	ndenv.sh /etc/profile.d/
 COPY	config/database.yml $APP_ROOT/config/database.yml
+COPY	config/webpacker.yml $APP_ROOT/config/webpacker.yml
 
 RUN     true && \
 # DNS add.

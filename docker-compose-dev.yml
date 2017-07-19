@@ -6,6 +6,18 @@ services:
       - web-sock:/web/rails5_app/tmp/sockets
       - web-assets:/web/rails5_app/public
 
+  webpack:
+    image: rails5docker_rails
+    networks:
+      - back
+    expose:
+      - "8080"
+    command: ./bin/webpack-dev-server --host 0.0.0.0
+    depends_on:
+      - rails
+      - mysql
+    restart: always
+
 volumes:
   rails5_app:
     external: true
